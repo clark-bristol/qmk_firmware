@@ -36,19 +36,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
      LSFT, Z  , X  , C  , V  , B  ,MEH ,     HYPR, N  , M  ,COMM,DOT ,SLSH,RSFT,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LALT,LGUI,SPC ,         ENT ,LOWR,RASE
+                        LALT,LGUI,SPC ,       ENT ,LOWR,RASE
   //                  `----+----+----'        `----+----+----'
   ),
 
+// hotkey categories:
+  // cmd... : switch focus between apps (tab), windows (grave), tabs (numbers)
+  // opt... : switch focus between panes (add: opt+tab)
+  // cmd+shft : move and resize windows
+  // ?
+
+// MEH = Left Control, Shift and Alt
+// CAPS = Left Control, Shift, Alt and GUI
+
 [_LOWER] = KC_KEYMAP(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-         ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    , DEL,
+         ,    ,    ,    ,    ,    ,                   ,    ,    ,MINS, EQL, DEL,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-    GRAVE,    ,    ,    ,    ,    ,                   ,MINS,UNDS,EQL ,PLUS,    ,
+    GRAVE,    ,LPRN,LBRC,LCBR,    ,                   ,RCBR,RBRC,RPRN,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    ,    ,    ,    ,    ,               LEFT,DOWN, UP ,RGHT,    ,    ,
+         ,MINS,UNDS,EQL ,PLUS,    ,               LEFT,DOWN, UP ,RGHT,    ,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,    ,LPRN,LBRC,LCBR,    ,CAPS,     CAPS,    ,RCBR,RBRC,RPRN,    ,    ,
+         ,    ,    ,    ,    ,    ,    ,     CAPS,    ,MINS,UNDS,EQL ,PLUS,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                            ,    ,     ,            ,    ,
   //                  `----+----+----'        `----+----+----'
