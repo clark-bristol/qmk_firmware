@@ -34,9 +34,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LCTL, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,QUOT,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LSFT, Z  , X  , C  , V  , B  , MEH,     HYPR, N  , M  ,COMM,DOT ,SLSH,RSFT,
+     LSFT, Z  , X  , C  , V  , B  ,RASE,     RASE, N  , M  ,COMM,DOT ,SLSH,RSFT,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                        LALT,LGUI,SPC ,       ENT ,LOWR,RASE
+                        LALT,LGUI,SPC ,       ENT ,LOWR,LEAD
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -143,4 +143,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
   return true;
+}
+
+LEADER_EXTERNS();
+
+void matrix_scan_user(void) {
+  LEADER_DICTIONARY() {
+    leading = false;
+    leader_end();
+
+    SEQ_ONE_KEY(KC_T) {
+      register_code(KC_LGUI);
+      register_code(KC_TAB);
+      unregister_code(KC_TAB);
+      unregister_code(KC_LGUI);
+    }
+    // SEQ_TWO_KEYS(KC_A, KC_S) {
+    //   register_code(KC_H);
+    //   unregister_code(KC_H);
+    // }
+    // SEQ_THREE_KEYS(KC_A, KC_S, KC_D) {
+    //   register_code(KC_LGUI);
+    //   register_code(KC_S);
+    //   unregister_code(KC_S);
+    //   unregister_code(KC_LGUI);
+    // }
+  }
 }
