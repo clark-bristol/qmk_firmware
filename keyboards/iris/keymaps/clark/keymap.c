@@ -34,9 +34,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LCTL, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,QUOT,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LSFT, Z  , X  , C  , V  , B  ,RASE,     RASE, N  , M  ,COMM,DOT ,SLSH,RSFT,
+     LSFT, Z  , X  , C  , V  , B  , MEH,     LEAD, N  , M  ,COMM,DOT ,SLSH,RSFT,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                        LALT,LGUI,SPC ,       ENT ,LOWR,LEAD
+                        LALT,LGUI,SPC ,       ENT ,LOWR,RASE
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -59,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
          ,    ,    ,    ,    ,    ,    ,     CAPS,    ,MINS,UNDS,EQL ,PLUS,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                           ,    ,     ,            ,    ,
+                           ,    , LEAD,            ,    ,
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -152,21 +152,24 @@ void matrix_scan_user(void) {
     leading = false;
     leader_end();
 
-    SEQ_ONE_KEY(KC_T) {
-      register_code(KC_LGUI);
-      register_code(KC_TAB);
-      unregister_code(KC_TAB);
-      unregister_code(KC_LGUI);
-    }
+    // SEQ_ONE_KEY(KC_T) {
+    //   SEND_STRING("SELECT COUNT");
+    // }
     // SEQ_TWO_KEYS(KC_A, KC_S) {
     //   register_code(KC_H);
     //   unregister_code(KC_H);
     // }
-    // SEQ_THREE_KEYS(KC_A, KC_S, KC_D) {
-    //   register_code(KC_LGUI);
-    //   register_code(KC_S);
-    //   unregister_code(KC_S);
-    //   unregister_code(KC_LGUI);
-    // }
+    SEQ_TWO_KEYS(KC_Q, KC_C) {
+      SEND_STRING("SELECT COUNT(*) FROM ");
+    }
+    SEQ_TWO_KEYS(KC_Q, KC_L) {
+      SEND_STRING("LIMIT 10;");
+    }
+    SEQ_TWO_KEYS(KC_Q, KC_J) {
+      SEND_STRING("LEFT JOIN table t ON t.col = a.col");
+    }
+    SEQ_TWO_KEYS(KC_Q, KC_U) {
+      SEND_STRING("SELECT col, COUNT(*) FROM table GROUP BY 1 ORDER BY 2 DESC;");
+    }
   }
 }
