@@ -48,6 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define PERMISSIVE_HOLD
 
 // for Auto Shift
-#define AUTO_SHIFT_TIMEOUT 135
+#define AUTO_SHIFT_TIMEOUT 100
+
+// todo: look at mod-tap and permissive hold
 
 #endif
