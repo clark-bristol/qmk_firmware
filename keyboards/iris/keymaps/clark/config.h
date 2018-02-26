@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // for Leader Key
 #define LEADER_TIMEOUT 500
 
-// fod tapdance
-#define TAPPING_TERM 50
+// for tapdance
+// #define TAPPING_TERM 100
 
 #endif

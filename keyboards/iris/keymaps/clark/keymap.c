@@ -17,13 +17,14 @@ enum custom_keycodes {
 };
 
 // tapdance definitions
-enum {
-  TD_LALT,
-  TD_LSFT,
-  TD_RSFT,
-};
-
-
+// enum {
+//   W_LPRN = 0,
+//   E_LBRC = 0,
+//   R_LCBR = 0,
+//   // TD_LALT,
+//   // TD_LSFT,
+//   // TD_RSFT,
+// };
 
 #define KC_ KC_TRNS
 #define _______ KC_TRNS
@@ -32,6 +33,8 @@ enum {
 #define KC_RASE RAISE
 #define KC_RST RESET
 #define KC_BL_S BL_STEP
+// #define LPRN LSFT(KC_9)
+// #define RPRN LSFT(KC_0)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -43,9 +46,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
      KC_LCTL , KC_A   ,  KC_S  ,  KC_D  ,  KC_F  ,  KC_G  ,                         KC_H  ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------+--------.    ,--------|--------+--------+--------+--------+--------+--------|
-      TD(TD_LSFT), KC_Z   ,  KC_X  ,  KC_C  ,  KC_V  ,  KC_B  , KC_MEH,       KC_LEAD,  KC_N  ,  KC_M  , KC_COMM, KC_DOT , KC_SLSH,TD(TD_RSFT),
+      KC_LSPO, KC_Z   ,  KC_X  ,  KC_C  ,  KC_V  ,  KC_B  , KC_MEH,   TG(_RAISE),  KC_N  ,  KC_M  , KC_COMM, KC_DOT , KC_SLSH, KC_RSPC,
   //`--------+--------+--------+--------+--------+--------+--------/    \--------+--------+--------+--------+--------+--------+--------'
-                                        KC_LALT, KC_LGUI, KC_SPC ,       KC_ENT , KC_LOWR, KC_RASE
+                                        KC_LALT, KC_LGUI, KC_SPC ,         KC_ENT , KC_LOWR, KC_LEAD
   //                                  `--------+--------+--------'        `--------+--------+--------'
   ),
 
@@ -59,31 +62,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // CAPS = Left Control, Shift, Alt and GUI
 
 [_LOWER] = KC_KEYMAP(
-  //,----+--------+--------+--------+--------+----.              ,----+--------+--------+--------+--------+----.
-    GRAVE,    ,    ,    ,    ,    ,                   ,    ,    ,MINS, EQL, DEL,
-  //|----+--------+--------+--------+--------+----|              |----+--------+--------+--------+--------+----|
-         ,    ,LPRN,LBRC,LCBR,    ,                   ,RCBR,RBRC,RPRN,    ,    ,
-  //|----+--------+--------+--------+--------+----|              |----+--------+--------+--------+--------+----|
-         ,MINS,UNDS,EQL ,PLUS,    ,               LEFT,DOWN, UP ,RGHT,    ,    ,
-  //|----+--------+--------+--------+--------+--------+----.    ,----|----+--------+--------+--------+--------+----|
-         ,    ,    ,    ,    ,    ,    ,     CAPS,    ,MINS,UNDS,EQL ,PLUS,    ,
-  //`----+--------+--------+--+-+--------+--------+----/    \----+--------+--------+--------+--------+--------+----'
-                           ,    , LEAD,            ,    ,
-  //                  `----+--------+----'        `----+--------+----'
+  //,--------+--------+--------+--------+--------+--------.                      ,--------+--------+--------+--------+--------+--------.
+    GRAVE    ,        ,        ,        ,        ,        ,                               ,        ,        ,MINS    , EQL    , DEL    ,
+  //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
+             ,        ,LPRN    ,LBRC    ,LCBR    ,        ,                               ,RCBR    ,RBRC    ,RPRN    ,        ,        ,
+  //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
+             ,MINS    ,UNDS    ,EQL     ,PLUS    ,        ,                       LEFT    ,DOWN    , UP     ,RGHT    ,        ,        ,
+  //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
+             ,        ,        ,        ,        ,        ,         ,        CAPS,        ,MINS    ,UNDS    ,EQL     ,PLUS    ,        ,
+  //`--------+--------+--------+--------+--------+--------+--------/    \--------+--------+--------+--------+--------+--------+--------'
+                                                ,        ,    LEAD,               ,        ,
+  //                                  `--------+--------+--------'        `--------+--------+--------'
   ),
 
 [_RAISE] = KC_KEYMAP(
-  //,----+--------+--------+--------+--------+----.              ,----+--------+--------+--------+--------+----.
-     F12 , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,F11 ,
-  //|----+--------+--------+--------+--------+----|              |----+--------+--------+--------+--------+----|
-         ,MRWD,MFFD,VOLU,PGUP,    ,                   ,PSLS,PMNS, P7 , P8 , P9 ,
-  //|----+--------+--------+--------+--------+----|              |----+--------+--------+--------+--------+----|
-         ,MSTP,MPLY,VOLD,PGDN,    ,                   ,PAST,PPLS, P4 , P5 , P6 ,
-  //|----+--------+--------+--------+--------+----|              |----+--------+--------+--------+--------+----|
-         ,    ,    ,    ,    ,    ,    ,         ,    ,PDOT, P0 , P1 , P2 , P3 ,
-  //`----+--------+--------+--+-+--------+--------+----/    \----+--------+--------+--------+--------+--------+----'
-                           ,    ,    ,             ,    ,
-  //                  `----+--------+----'        `----+--------+----'
+  //,--------+--------+--------+--------+--------+--------.                      ,--------+--------+--------+--------+--------+--------.
+     F12     , F1     , F2     , F3     , F4     , F5     ,                        F6     , F7     , F8     , F9     ,F10     ,F11     ,
+  //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
+             ,MRWD    ,MFFD    ,VOLU    ,PGUP    ,        ,                               ,PSLS    ,PMNS    , P7     , P8     , P9     ,
+  //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
+             ,MSTP    ,MPLY    ,VOLD    ,PGDN    ,        ,                               ,PAST    ,PPLS    , P4     , P5     , P6     ,
+  //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
+             ,        ,        ,        ,        ,        ,        ,    ,        ,PDOT    , P0     , P1     , P2     , P3     ,
+  //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
+                                                ,        ,        ,                ,        ,
+  //                                  `--------+--------+--------'        `--------+--------+--------'
   ),
 
 [_ADJUST] = KEYMAP(
@@ -107,35 +110,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //**************** Definitions needed for quad function to work *********************//
 //Enums used to clearly convey the state of the tap dance
 
-enum {
-  SINGLE_TAP = 1,
-  SINGLE_HOLD = 2,
-  DOUBLE_TAP = 3,
-  DOUBLE_HOLD = 4,
-  DOUBLE_SINGLE_TAP = 5 //send SINGLE_TAP twice - NOT DOUBLE_TAP
-  // Add more enums here if you want for triple, quadruple, etc.
-};
+// enum {
+//   SINGLE_TAP = 1,
+//   SINGLE_HOLD = 2,
+//   DOUBLE_TAP = 3,
+//   DOUBLE_HOLD = 4,
+//   DOUBLE_SINGLE_TAP = 5 //send SINGLE_TAP twice - NOT DOUBLE_TAP
+//   // Add more enums here if you want for triple, quadruple, etc.
+// };
 
-typedef struct {
-  bool is_press_action;
-  int state;
-} tap;
+// typedef struct {
+//   bool is_press_action;
+//   int state;
+// } tap;
 
-int cur_dance (qk_tap_dance_state_t *state) {
-  if (state->count == 1) {
-    //If count = 1, and it has been interrupted - it doesn't matter if it is pressed or not: Send SINGLE_TAP
-    if (state->interrupted || state->pressed==0) return SINGLE_TAP;
-    else return SINGLE_HOLD;
-  }
-  //If count = 2, and it has been interrupted - assume that user is trying to type the letter associated
-  //with single tap. In example below, that means to send `xx` instead of `Escape`.
-  else if (state->count == 2) {
-    if (state->interrupted) return DOUBLE_SINGLE_TAP;
-    else if (state->pressed) return DOUBLE_HOLD;
-    else return DOUBLE_TAP;
-  }
-  else return 6; //magic number. At some point this method will expand to work for more presses
-}
+// int cur_dance (qk_tap_dance_state_t *state) {
+//   if (state->count == 1) {
+//     //If count = 1, and it has been interrupted - it doesn't matter if it is pressed or not: Send SINGLE_TAP
+//     if (state->interrupted || state->pressed==0) return SINGLE_TAP;
+//     else return SINGLE_HOLD;
+//   }
+//   //If count = 2, and it has been interrupted - assume that user is trying to type the letter associated
+//   //with single tap. In example below, that means to send `xx` instead of `Escape`.
+//   else if (state->count == 2) {
+//     if (state->interrupted) return DOUBLE_SINGLE_TAP;
+//     else if (state->pressed) return DOUBLE_HOLD;
+//     else return DOUBLE_TAP;
+//   }
+//   else return 6; //magic number. At some point this method will expand to work for more presses
+// }
 
 
 
@@ -143,97 +146,102 @@ int cur_dance (qk_tap_dance_state_t *state) {
 
 
 
-//LALT
-static tap lalt_tap_state = {
-  .is_press_action = true,
-  .state = 0
-};
+// //LALT
+// static tap lalt_tap_state = {
+//   .is_press_action = true,
+//   .state = 0
+// };
 
-void lalt_finished (qk_tap_dance_state_t *state, void *user_data) {
-  lalt_tap_state.state = cur_dance(state);
-  switch (lalt_tap_state.state) {
-    case SINGLE_TAP: register_code(KC_LBRC); break;
-    case SINGLE_HOLD: register_code(KC_LALT); break;
-  }
-}
+// void lalt_finished (qk_tap_dance_state_t *state, void *user_data) {
+//   lalt_tap_state.state = cur_dance(state);
+//   switch (lalt_tap_state.state) {
+//     case SINGLE_TAP: register_code(KC_LBRC); break;
+//     case SINGLE_HOLD: register_code(KC_LALT); break;
+//   }
+// }
 
-void lalt_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (lalt_tap_state.state) {
-    case SINGLE_TAP: unregister_code(KC_LBRC); break;
-    case SINGLE_HOLD: unregister_code(KC_LALT); break;
-  }
-  lalt_tap_state.state = 0;
-}
-
-
-
-//LSFT
-static tap lsft_tap_state = {
-  .is_press_action = true,
-  .state = 0
-};
-
-void lsft_finished (qk_tap_dance_state_t *state, void *user_data) {
-  lsft_tap_state.state = cur_dance(state);
-  switch (lsft_tap_state.state) {
-    case SINGLE_TAP:
-      register_code(KC_LSFT);
-      register_code(KC_9);
-      break;
-    case SINGLE_HOLD: register_code(KC_LSFT); break;
-  }
-}
-
-void lsft_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (lsft_tap_state.state) {
-    case SINGLE_TAP:
-      unregister_code(KC_9);
-      unregister_code(KC_LSFT);
-      break;
-    case SINGLE_HOLD: unregister_code(KC_LSFT); break;
-  }
-  lsft_tap_state.state = 0;
-}
+// void lalt_reset (qk_tap_dance_state_t *state, void *user_data) {
+//   switch (lalt_tap_state.state) {
+//     case SINGLE_TAP: unregister_code(KC_LBRC); break;
+//     case SINGLE_HOLD: unregister_code(KC_LALT); break;
+//   }
+//   lalt_tap_state.state = 0;
+// }
 
 
 
-// RSFT
-static tap rsft_tap_state = {
-  .is_press_action = true,
-  .state = 0
-};
+// //LSFT
+// static tap lsft_tap_state = {
+//   .is_press_action = true,
+//   .state = 0
+// };
 
-void rsft_finished (qk_tap_dance_state_t *state, void *user_data) {
-  rsft_tap_state.state = cur_dance(state);
-  switch (rsft_tap_state.state) {
-    case SINGLE_TAP:
-      register_code(KC_RSFT);
-      register_code(KC_0);
-      break;
-    case SINGLE_HOLD: register_code(KC_RSFT); break;
-  }
-}
+// void lsft_finished (qk_tap_dance_state_t *state, void *user_data) {
+//   lsft_tap_state.state = cur_dance(state);
+//   switch (lsft_tap_state.state) {
+//     case SINGLE_TAP:
+//       register_code(KC_LSFT);
+//       register_code(KC_9);
+//       break;
+//     case SINGLE_HOLD: register_code(KC_LSFT); break;
+//   }
+// }
 
-void rsft_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (rsft_tap_state.state) {
-    case SINGLE_TAP:
-      unregister_code(KC_0);
-      unregister_code(KC_RSFT);
-      break;
-    case SINGLE_HOLD: unregister_code(KC_RSFT); break;
-  }
-  rsft_tap_state.state = 0;
-}
+// void lsft_reset (qk_tap_dance_state_t *state, void *user_data) {
+//   switch (lsft_tap_state.state) {
+//     case SINGLE_TAP:
+//       unregister_code(KC_9);
+//       unregister_code(KC_LSFT);
+//       break;
+//     case SINGLE_HOLD: unregister_code(KC_LSFT); break;
+//   }
+//   lsft_tap_state.state = 0;
+// }
 
 
 
-//Tap Dance Definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
-  // [TD_LALT]  = ACTION_TAP_DANCE_DOUBLE(KC_LALT, KC_C)
-  // [TD_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lalt_finished, lalt_reset),
-  [TD_LSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lsft_finished, lsft_reset),
-  [TD_RSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rsft_finished, rsft_reset),
-};
+// // W
+// static tap w_tap_state = {
+//   .is_press_action = true,
+//   .state = 0
+// };
+
+// void w_finished (qk_tap_dance_state_t *state, void *user_data) {
+//   w_tap_state.state = cur_dance(state);
+//   switch (w_tap_state.state) {
+//     case SINGLE_TAP:
+//       register_code(KC_W);
+//       break;
+//     case DOUBLE_TAP:
+//       register_code(KC_LSFT);
+//       register_code(KC_9);
+//       break;
+//   }
+// }
+
+// void w_reset (qk_tap_dance_state_t *state, void *user_data) {
+//   switch (w_tap_state.state) {
+//     case SINGLE_TAP:
+//       unregister_code(KC_W);
+//       break;
+//     case DOUBLE_TAP:
+//       unregister_code(KC_9);
+//       unregister_code(KC_LSFT);
+//       break;
+//   }
+//   w_tap_state.state = 0;
+// }
+
+
+
+// //Tap Dance Definitions
+// qk_tap_dance_action_t tap_dance_actions[] = {
+//   // [W_LPRN]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, w_finished, w_reset),
+//   // [E_LBRC]  = ACTION_TAP_DANCE_DOUBLE (KC_E, KC_LBRC),
+//   // [R_LCBR]  = ACTION_TAP_DANCE_DOUBLE (KC_R, KC_LCBR),
+//   // [TD_LSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lsft_finished, lsft_reset),
+//   // [TD_RSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rsft_finished, rsft_reset),
+// };
 
 
 
@@ -289,6 +297,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+
+// Leader Key
 LEADER_EXTERNS();
 
 void matrix_scan_user(void) {
