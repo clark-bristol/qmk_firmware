@@ -44,4 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // for tapdance
 // #define TAPPING_TERM 100
 
+// for permissive hold
+// #define PERMISSIVE_HOLD
+
+// for Auto Shift
+#define AUTO_SHIFT_TIMEOUT 135
+
 #endif
