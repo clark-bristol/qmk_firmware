@@ -16,16 +16,14 @@ enum custom_keycodes {
   ADJUST,
 };
 
-//Tap Dance Declarations
+// tapdance definitions
 enum {
-  TD_ESC_CAPS = 0
+  TD_LALT,
+  TD_LSFT,
+  TD_RSFT,
 };
 
-//Tap Dance Definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [TD_ESC_CAPS]  = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS)
-// Other declarations would go here, separated by commas, if you have them
-};
+
 
 #define KC_ KC_TRNS
 #define _______ KC_TRNS
@@ -45,9 +43,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                      |--------+--------+--------+--------+--------+--------|
      KC_LCTL , KC_A   ,  KC_S  ,  KC_D  ,  KC_F  ,  KC_G  ,                         KC_H  ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------+--------.    ,--------|--------+--------+--------+--------+--------+--------|
-     KC_LSPO , KC_Z   ,  KC_X  ,  KC_C  ,  KC_V  ,  KC_B  , KC_MEH,       KC_LEAD,  KC_N  ,  KC_M  , KC_COMM, KC_DOT , KC_SLSH, KC_RSPC,
+      TD(TD_LSFT), KC_Z   ,  KC_X  ,  KC_C  ,  KC_V  ,  KC_B  , KC_MEH,       KC_LEAD,  KC_N  ,  KC_M  , KC_COMM, KC_DOT , KC_SLSH,TD(TD_RSFT),
   //`--------+--------+--------+--------+--------+--------+--------/    \--------+--------+--------+--------+--------+--------+--------'
-                                       KC_LALT  , KC_LGUI, KC_SPC ,        KC_ENT , KC_LOWR, KC_RASE
+                                        KC_LALT, KC_LGUI, KC_SPC ,       KC_ENT , KC_LOWR, KC_RASE
   //                                  `--------+--------+--------'        `--------+--------+--------'
   ),
 
@@ -103,6 +101,141 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 
 };
+
+
+//Tap Dance Declarations
+//**************** Definitions needed for quad function to work *********************//
+//Enums used to clearly convey the state of the tap dance
+
+enum {
+  SINGLE_TAP = 1,
+  SINGLE_HOLD = 2,
+  DOUBLE_TAP = 3,
+  DOUBLE_HOLD = 4,
+  DOUBLE_SINGLE_TAP = 5 //send SINGLE_TAP twice - NOT DOUBLE_TAP
+  // Add more enums here if you want for triple, quadruple, etc.
+};
+
+typedef struct {
+  bool is_press_action;
+  int state;
+} tap;
+
+int cur_dance (qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    //If count = 1, and it has been interrupted - it doesn't matter if it is pressed or not: Send SINGLE_TAP
+    if (state->interrupted || state->pressed==0) return SINGLE_TAP;
+    else return SINGLE_HOLD;
+  }
+  //If count = 2, and it has been interrupted - assume that user is trying to type the letter associated
+  //with single tap. In example below, that means to send `xx` instead of `Escape`.
+  else if (state->count == 2) {
+    if (state->interrupted) return DOUBLE_SINGLE_TAP;
+    else if (state->pressed) return DOUBLE_HOLD;
+    else return DOUBLE_TAP;
+  }
+  else return 6; //magic number. At some point this method will expand to work for more presses
+}
+
+
+
+//**************** Definitions needed for quad function to work *********************//
+
+
+
+//LALT
+static tap lalt_tap_state = {
+  .is_press_action = true,
+  .state = 0
+};
+
+void lalt_finished (qk_tap_dance_state_t *state, void *user_data) {
+  lalt_tap_state.state = cur_dance(state);
+  switch (lalt_tap_state.state) {
+    case SINGLE_TAP: register_code(KC_LBRC); break;
+    case SINGLE_HOLD: register_code(KC_LALT); break;
+  }
+}
+
+void lalt_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (lalt_tap_state.state) {
+    case SINGLE_TAP: unregister_code(KC_LBRC); break;
+    case SINGLE_HOLD: unregister_code(KC_LALT); break;
+  }
+  lalt_tap_state.state = 0;
+}
+
+
+
+//LSFT
+static tap lsft_tap_state = {
+  .is_press_action = true,
+  .state = 0
+};
+
+void lsft_finished (qk_tap_dance_state_t *state, void *user_data) {
+  lsft_tap_state.state = cur_dance(state);
+  switch (lsft_tap_state.state) {
+    case SINGLE_TAP:
+      register_code(KC_LSFT);
+      register_code(KC_9);
+      break;
+    case SINGLE_HOLD: register_code(KC_LSFT); break;
+  }
+}
+
+void lsft_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (lsft_tap_state.state) {
+    case SINGLE_TAP:
+      unregister_code(KC_9);
+      unregister_code(KC_LSFT);
+      break;
+    case SINGLE_HOLD: unregister_code(KC_LSFT); break;
+  }
+  lsft_tap_state.state = 0;
+}
+
+
+
+// RSFT
+static tap rsft_tap_state = {
+  .is_press_action = true,
+  .state = 0
+};
+
+void rsft_finished (qk_tap_dance_state_t *state, void *user_data) {
+  rsft_tap_state.state = cur_dance(state);
+  switch (rsft_tap_state.state) {
+    case SINGLE_TAP:
+      register_code(KC_RSFT);
+      register_code(KC_0);
+      break;
+    case SINGLE_HOLD: register_code(KC_RSFT); break;
+  }
+}
+
+void rsft_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (rsft_tap_state.state) {
+    case SINGLE_TAP:
+      unregister_code(KC_0);
+      unregister_code(KC_RSFT);
+      break;
+    case SINGLE_HOLD: unregister_code(KC_RSFT); break;
+  }
+  rsft_tap_state.state = 0;
+}
+
+
+
+//Tap Dance Definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+  // [TD_LALT]  = ACTION_TAP_DANCE_DOUBLE(KC_LALT, KC_C)
+  // [TD_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lalt_finished, lalt_reset),
+  [TD_LSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lsft_finished, lsft_reset),
+  [TD_RSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rsft_finished, rsft_reset),
+};
+
+
 
 #ifdef AUDIO_ENABLE
 float tone_qwerty[][2]     = SONG(QWERTY_SOUND);
