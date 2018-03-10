@@ -333,4 +333,3 @@ void matrix_scan_user(void) {
     }
   }
 }
-select * from stl_load_errors order by starttime desc limit 10;
