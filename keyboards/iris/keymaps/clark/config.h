@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LEADER_TIMEOUT 500
 
 // for tapdance
-// #define TAPPING_TERM 100
+#define TAPPING_TERM 100
 
 // for permissive hold
 // #define PERMISSIVE_HOLD
