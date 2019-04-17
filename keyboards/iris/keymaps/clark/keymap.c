@@ -44,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------+--------.    ,--------|--------+--------+--------+--------+--------+--------|
       KC_LSPO, KC_Z   ,  KC_X  ,  KC_C  ,  KC_V  ,  KC_B  , KC_CAPS   ,  KC_LEAD ,  KC_N  ,  KC_M  , KC_COMM, KC_DOT , KC_SLSH, KC_RSPC,
   //`--------+--------+--------+--------+--------+--------+--------/    \--------+--------+--------+--------+--------+--------+--------'
-                                         KC_LALT, KC_LGUI,  KC_SPC,         LOWER , KC_RGUI, RAISE
+                                         KC_LALT, KC_LGUI,  KC_SPC,         KC_SPC , LOWER, RAISE
   //                                  `--------+--------+--------'        `--------+--------+--------'
   ),
 
@@ -254,6 +254,9 @@ void matrix_scan_user(void) {
     SEQ_TWO_KEYS(KC_Q, KC_C) {
       SEND_STRING("SELECT COUNT(*) FROM ");
     }
+    SEQ_TWO_KEYS(KC_Q, KC_S) {
+      SEND_STRING("SELECT * FROM ");
+    }
     SEQ_TWO_KEYS(KC_Q, KC_L) {
       SEND_STRING("LIMIT 10;");
     }
@@ -265,12 +268,6 @@ void matrix_scan_user(void) {
     }
     SEQ_TWO_KEYS(KC_Q, KC_D) {
       SEND_STRING("SELECT ddl\nFROM admin.v_generate_tbl_ddl\nWHERE schemaname = 'warehouse' AND tablename = 'table_name';\n\nSELECT get_ddl('table', 'warehouse.table_name');");
-    }
-    SEQ_TWO_KEYS(KC_P, KC_R) {
-      SEND_STRING("## What?\n\n## Why (Business Problem)?\n\n## How was it tested?\n- [x] Specs\n- [ ] Locally\n- [x] Staging\n\n## Trello Card:\n");
-    }
-    SEQ_TWO_KEYS(KC_L, KC_E) {
-      SEND_STRING("SELECT * FROM stl_load_errors ORDER BY starttime DESC LIMIT 10;");
     }
   }
 }
