@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LEADER_PER_KEY_TIMING
 
 // for tapdance
-#define TAPPING_TERM 100
+#define TAPPING_TERM 115
 
 // for permissive hold
 // #define PERMISSIVE_HOLD
