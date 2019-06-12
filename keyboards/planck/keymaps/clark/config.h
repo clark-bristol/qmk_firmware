@@ -1,12 +1,39 @@
 #pragma once
 
+#define MY_SOUND \
+    Q__NOTE(_G5),     \
+    Q__NOTE(_FS5),    \
+    Q__NOTE(_DS5),     \
+    Q__NOTE(_A4),    \
+    Q__NOTE(_GS4),     \
+    Q__NOTE(_E5),     \
+    Q__NOTE(_GS5),     \
+    HD_NOTE(_C6),
+
+#define LOWER_SOUND \
+    Q__NOTE(_E6  ),  \
+    Q__NOTE(_G6  ),  \
+    Q__NOTE(_E7  ),  \
+    Q__NOTE(_C7  ),  \
+    Q__NOTE(_D7  ),  \
+    Q__NOTE(_G7  ),
+
+#define RAISE_SOUND \
+    HD_NOTE(_A4 ), \
+    Q__NOTE(_E4 ), \
+    Q__NOTE(_A4 ), \
+    HD_NOTE(_B4 ), \
+    Q__NOTE(_E4 ), \
+    Q__NOTE(_B4 ), \
+    W__NOTE(_CS5),
+
 #ifdef AUDIO_ENABLE
-    #define STARTUP_SONG SONG(PLANCK_SOUND)
+    #define STARTUP_SONG SONG(MY_SOUND)
     // #define STARTUP_SONG SONG(NO_SOUND)
 
     #define DEFAULT_LAYER_SONGS { SONG(QWERTY_SOUND), \
-                                  SONG(COLEMAK_SOUND), \
-                                  SONG(DVORAK_SOUND) \
+                                  SONG(LOWER_SOUND), \
+                                  SONG(RAISE_SOUND) \
                                 }
 #endif
 
@@ -41,3 +68,6 @@
 
 // for tapdance
 #define TAPPING_TERM 115
+
+#define NO_MUSIC_MODE
+#define AUDIO_CLICKY
