@@ -67,7 +67,7 @@
 // Clark:
 
 // for tapdance
-#define TAPPING_TERM 115
+#define TAPPING_TERM 140
 
 #define NO_MUSIC_MODE
 #define AUDIO_CLICKY
