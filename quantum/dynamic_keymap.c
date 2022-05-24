@@ -14,36 +14,74 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
-#include "keymap.h"  // to get keymaps[][][]
-#include "tmk_core/common/eeprom.h"
-#include "progmem.h"  // to read default from flash
-#include "quantum.h"  // for send_string()
+#include "keymap.h" // to get keymaps[][][]
+#include "eeprom.h"
+#include "progmem.h" // to read default from flash
+#include "quantum.h" // for send_string()
 #include "dynamic_keymap.h"
+#include "via.h" // for default VIA_EEPROM_ADDR_END
 
-#ifdef DYNAMIC_KEYMAP_ENABLE
+#ifndef DYNAMIC_KEYMAP_LAYER_COUNT
+#    define DYNAMIC_KEYMAP_LAYER_COUNT 4
+#endif
 
-#    ifndef DYNAMIC_KEYMAP_EEPROM_ADDR
+#ifndef DYNAMIC_KEYMAP_MACRO_COUNT
+#    define DYNAMIC_KEYMAP_MACRO_COUNT 16
+#endif
+
+#ifndef TOTAL_EEPROM_BYTE_COUNT
+#    error Unknown total EEPROM size. Cannot derive maximum for dynamic keymaps.
+#endif
+
+#ifndef DYNAMIC_KEYMAP_EEPROM_MAX_ADDR
+#    define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR (TOTAL_EEPROM_BYTE_COUNT - 1)
+#endif
+
+#if DYNAMIC_KEYMAP_EEPROM_MAX_ADDR > (TOTAL_EEPROM_BYTE_COUNT - 1)
+#    pragma message STR(DYNAMIC_KEYMAP_EEPROM_MAX_ADDR) " > " STR((TOTAL_EEPROM_BYTE_COUNT - 1))
+#    error DYNAMIC_KEYMAP_EEPROM_MAX_ADDR is configured to use more space than what is available for the selected EEPROM driver
+#endif
+
+// Due to usage of uint16_t check for max 65535
+#if DYNAMIC_KEYMAP_EEPROM_MAX_ADDR > 65535
+#    pragma message STR(DYNAMIC_KEYMAP_EEPROM_MAX_ADDR) " > 65535"
+#    error DYNAMIC_KEYMAP_EEPROM_MAX_ADDR must be less than 65536
+#endif
+
+// If DYNAMIC_KEYMAP_EEPROM_ADDR not explicitly defined in config.h,
+// default it start after VIA_EEPROM_CUSTOM_ADDR+VIA_EEPROM_CUSTOM_SIZE
+#ifndef DYNAMIC_KEYMAP_EEPROM_ADDR
+#    ifdef VIA_EEPROM_CUSTOM_CONFIG_ADDR
+#        define DYNAMIC_KEYMAP_EEPROM_ADDR (VIA_EEPROM_CUSTOM_CONFIG_ADDR + VIA_EEPROM_CUSTOM_CONFIG_SIZE)
+#    else
 #        error DYNAMIC_KEYMAP_EEPROM_ADDR not defined
 #    endif
+#endif
 
-#    ifndef DYNAMIC_KEYMAP_LAYER_COUNT
-#        error DYNAMIC_KEYMAP_LAYER_COUNT not defined
-#    endif
+// Dynamic macro starts after dynamic keymaps
+#ifndef DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR
+#    define DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR (DYNAMIC_KEYMAP_EEPROM_ADDR + (DYNAMIC_KEYMAP_LAYER_COUNT * MATRIX_ROWS * MATRIX_COLS * 2))
+#endif
 
-#    ifndef DYNAMIC_KEYMAP_MACRO_COUNT
-#        error DYNAMIC_KEYMAP_MACRO_COUNT not defined
-#    endif
+// Sanity check that dynamic keymaps fit in available EEPROM
+// If there's not 100 bytes available for macros, then something is wrong.
+// The keyboard should override DYNAMIC_KEYMAP_LAYER_COUNT to reduce it,
+// or DYNAMIC_KEYMAP_EEPROM_MAX_ADDR to increase it, *only if* the microcontroller has
+// more than the default.
+#if DYNAMIC_KEYMAP_EEPROM_MAX_ADDR - DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR < 100
+#    pragma message STR(DYNAMIC_KEYMAP_EEPROM_MAX_ADDR - DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR) " < 100"
+#    error Dynamic keymaps are configured to use more EEPROM than is available.
+#endif
 
-#    ifndef DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR
-#        error DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR not defined
-#    endif
+// Dynamic macros are stored after the keymaps and use what is available
+// up to and including DYNAMIC_KEYMAP_EEPROM_MAX_ADDR.
+#ifndef DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE
+#    define DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE (DYNAMIC_KEYMAP_EEPROM_MAX_ADDR - DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + 1)
+#endif
 
-#    ifndef DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE
-#        error DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE not defined
-#    endif
-
-uint8_t dynamic_keymap_get_layer_count(void) { return DYNAMIC_KEYMAP_LAYER_COUNT; }
+uint8_t dynamic_keymap_get_layer_count(void) {
+    return DYNAMIC_KEYMAP_LAYER_COUNT;
+}
 
 void *dynamic_keymap_key_to_eeprom_address(uint8_t layer, uint8_t row, uint8_t column) {
     // TODO: optimize this with some left shifts
@@ -115,9 +153,13 @@ uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
     }
 }
 
-uint8_t dynamic_keymap_macro_get_count(void) { return DYNAMIC_KEYMAP_MACRO_COUNT; }
+uint8_t dynamic_keymap_macro_get_count(void) {
+    return DYNAMIC_KEYMAP_MACRO_COUNT;
+}
 
-uint16_t dynamic_keymap_macro_get_buffer_size(void) { return DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE; }
+uint16_t dynamic_keymap_macro_get_buffer_size(void) {
+    return DYNAMIC_KEYMAP_MACRO_EEPROM_SIZE;
+}
 
 void dynamic_keymap_macro_get_buffer(uint16_t offset, uint16_t size, uint8_t *data) {
     void *   source = (void *)(DYNAMIC_KEYMAP_MACRO_EEPROM_ADDR + offset);
@@ -185,9 +227,9 @@ void dynamic_keymap_macro_send(uint8_t id) {
         ++p;
     }
 
-    // Send the macro string one or two chars at a time
-    // by making temporary 1 or 2 char strings
-    char data[3] = {0, 0, 0};
+    // Send the macro string one or three chars at a time
+    // by making temporary 1 or 3 char strings
+    char data[4] = {0, 0, 0, 0};
     // We already checked there was a null at the end of
     // the buffer, so this cannot go past the end
     while (1) {
@@ -198,15 +240,15 @@ void dynamic_keymap_macro_send(uint8_t id) {
             break;
         }
         // If the char is magic (tap, down, up),
-        // add the next char (key to use) and send a 2 char string.
+        // add the next char (key to use) and send a 3 char string.
         if (data[0] == SS_TAP_CODE || data[0] == SS_DOWN_CODE || data[0] == SS_UP_CODE) {
-            data[1] = eeprom_read_byte(p++);
-            if (data[1] == 0) {
+            data[1] = data[0];
+            data[0] = SS_QMK_PREFIX;
+            data[2] = eeprom_read_byte(p++);
+            if (data[2] == 0) {
                 break;
             }
         }
         send_string(data);
     }
 }
-
-#endif  // DYNAMIC_KEYMAP_ENABLE
