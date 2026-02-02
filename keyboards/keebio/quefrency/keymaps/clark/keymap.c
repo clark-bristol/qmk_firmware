@@ -46,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______,   KC_TAB , KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                   KC_Y,     KC_U,    KC_I,    KC_O,     KC_P, KC_LBRC, KC_RBRC, KC_BSLS, KC_END,
     _______, _______,   MO(_2) , KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                   KC_H,     KC_J,    KC_K,    KC_L,  KC_SCLN, KC_QUOT,  KC_ENT, KC_PGUP,
     _______, _______,   SC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                   KC_N,     KC_M, KC_COMM,  KC_DOT,  KC_SLSH, SC_RSPC,   KC_UP, KC_PGDN,
-    _______, _______,  KC_GRAVE, KC_ESC,  KC_LALT, KC_LGUI, TD(CESC), _______,              KC_SPC, KC_RGUI, KC_RALT, KC_RCTL,  _______, KC_BSLS, _______
+    _______, _______,  KC_GRAVE, KC_ESC,  KC_LALT, KC_LGUI, KC_LCTL, _______,              KC_SPC, KC_RGUI, KC_RALT, KC_RCTL,  _______, KC_BSLS, _______
   ),
 
   [_1] = LAYOUT_65_with_macro(
